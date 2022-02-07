@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>slideshow</title>
+    <link rel="shortcut icon" href="#" type="image/x-icon">
+    <script src="./slideshow.js"></script>
+</head>
+
+<body>
+    <div id="slideshow"></div>
+    <div class="test"></div>
+    <script>
+        let images = [
+            {
+                path: './images/1.png',
+                url: 'https://github.com/ivil'
+            },
+            {
+                path: './images/2.png',
+                url: 'https://github.com/ivil'
+            },
+            {
+                path: './images/3.png',
+                url: 'https://github.com/ivil'
+            },
+            {
+                path: './images/4.png',
+                url: 'https://github.com/ivil'
+            },
+            {
+                path: './images/5.png',
+                url: 'https://github.com/ivil'
+            },
+            {
+                path: './images/6.png',
+                url: 'https://github.com/ivil'
+            },
+            {
+                path: './images/7.png',
+                url: 'https://github.com/ivil'
+            },
+        ]
+        let config = {
+            imageWidth: 525,                    //图片宽度
+            imageHeight: 300,                   //图片高度
+            speedTime: 2000,                     //图片移动速度
+            margin: '10px',
+            timeInterval: 2,                    //图片切换间隔
+            direction: 'left',                  //移动方向
+            transitionFunction: 'ease-in-out',  //移动过渡动画
+        }
+        new Slideshow("#slideshow", images, config);
+        new Slideshow(".test", images, config);
+    </script>
+</body>
+
+</html>
