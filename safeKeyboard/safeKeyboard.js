@@ -47,8 +47,8 @@ class SafeKeyboard {
         </ul>
         <ul>
             <li>+</li>
+            <li>0</li>
             <li>-</li>
-            <li>*</li>
             <li>OK</li>
         </ul>`
         let uls = document.querySelectorAll('#keyboard ul')
