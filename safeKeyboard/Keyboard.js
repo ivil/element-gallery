@@ -1,30 +1,36 @@
-class Test {
-    $$el
+class Keyboard {
+    $el
 
     $dialog //会话框
     $cancel
     $ok
     $input
+    $display
     $keyboard
     /**
      * @param {el} el 要挂载的表单
-     * @param {function} f 设置OK键要执行的方法
+     * @param {function} submit 设置OK键要执行的方法
      */
-    constructor(el, f) {
+    constructor(el, submit) {
         this.$el = el
-        this.f = f;
+        this.submit = submit;
         this.init();
     }
     init() {
         this.createDialog();
+        this.$display = this.$el.style.display;
+        this.$el.style.display = 'none';
     }
     createDialog() {
-        console.log('createDialog');
         this.$dialog = document.createElement('div');
+        this.$dialog.setAttribute('id', 'dialog');
+        this.$dialog.addEventListener('mouseleave', this.destory.bind(this));
         this.$dialog.style = `
+        background: #fff;
         border-radius: 10px;
-        border: 2px solid pink;
+        background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
         font-family: 楷体;
+        font-size: larger;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -36,22 +42,52 @@ class Test {
         position: fixed;`
         this.$dialog.innerHTML = `
         <ul>
-            <h3>请输入密码</h3>
+            <h3></h3>
+            <h3 style='letter-spacing: 3px;'>请输入密码</h3>
+            <h3></h3>
         </ul>
         <ul>
             <input type="text">
         </ul>
         <ul>
             <button>cancel</button>
-            <button>OK</button>
+            <button>&nbsp;o&nbsp;&nbsp;k&nbsp;</button>
         </ul>`
         this.$el.parentNode.appendChild(this.$dialog);
         this.$input = this.$dialog.getElementsByTagName('input')[0];
         this.$cancel = this.$dialog.getElementsByTagName('button')[0];
         this.$ok = this.$dialog.getElementsByTagName('button')[1];
+        let dialogUls = this.$dialog.querySelectorAll('ul');
+        dialogUls.forEach(el=>{
+            el.style = `
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 30%;
+            width: 90%;`
+        })
         this.$input.style = `
         height: 40px;
-        width: 100%`
+        border: none;
+        outline: medium;
+        font-size: large;
+        text-align: center;
+        border-bottom: 1px solid black;
+        background-color: transparent;
+        width: 100%`;
+        this.$input.type = 'password';
+        this.$input.placeholder = '请输入密码'
+
+        this.$cancel.style = `
+        border: none;
+        border-radius: 10px;
+        background-color: transparent;
+        font-size: larger;`
+        this.$ok.style = `
+        border: none;
+        border-radius: 10px;
+        background-color: transparent;
+        font-size: larger;`
 
         this.$input.readOnly = true;
         this.$input.addEventListener('click', this.show.bind(this));
@@ -59,7 +95,6 @@ class Test {
         this.$ok.addEventListener('click', this.ok.bind(this));
     }
     createKeyboard() {
-        console.log('createKeyboard');
         this.$keyboard = document.createElement('div');
         this.$keyboard.addEventListener('mouseleave', this.hidden.bind(this));
         this.$keyboard.setAttribute('id', 'keyboard');
@@ -68,12 +103,11 @@ class Test {
         left: 0;
         right: 0;
         bottom: 0;
-        height: 260px;
+        height: 250px;
         width: 100%;
-        background-color: #faf4f4;
+        background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
         position: fixed;
-        borderRadius: 5px
-        `
+        borderRadius: 5px;`
         this.$keyboard.innerHTML = `
         <ul>
             <li>1</li>
@@ -106,8 +140,7 @@ class Test {
             display: flex;
             justify-content: space-around;
             align-items: center;
-            height: 60px;
-            `
+            height: 60px;`
         })
         let lis = document.querySelectorAll('#keyboard ul li')
         let values = []
@@ -119,9 +152,7 @@ class Test {
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 28px;
-            background: #fff
-            `
+            font-size: 28px;`
             values.push(el.innerHTML)
             el.addEventListener('click', this.edit.bind(this))
         })
@@ -130,22 +161,28 @@ class Test {
         if (e.target.innerHTML === 'X') {
             this.$input.value = this.$input.value.substring(0, this.$input.value.length - 1);
         } else if (e.target.innerHTML === 'OK') {
-            // this.f();   //safeKeyboard实例化时传入的方法;
+            // this.submit();   //safeKeyboard实例化时传入的方法;
             console.log(this.$input.value);
             this.hidden();
-        } else if (this.$input.value.length <= 16) {
+        } else if (this.$input.value.length <= 8) {
             this.$input.value = this.$input.value + e.target.innerHTML;
         } else {
-            console.warn("最长只能输入16位字符");
+            console.warn("最长只能输入8位字符");
         }
     }
     cancel() {
         console.log('cancel' + this.$input.value);
-        this.$dialog.remove();
+        this.destory();
     }
     ok() {
         console.log('ok' + this.$input.value);
+        this.submit();
+        this.destory();
+    }
+    destory() {
+        console.log(this.$input.value);
         this.$dialog.remove();
+        this.$el.style.display = this.$display;
     }
     show() {
         // this.$keyboard.style.display = 'block';
@@ -165,3 +202,5 @@ class Test {
         }
     }
 }
+
+export default Keyboard
