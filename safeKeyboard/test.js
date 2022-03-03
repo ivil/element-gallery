@@ -1,9 +1,13 @@
-class SafeKeyboard {
-    $el
+class Test {
+    $$el
+
+    $dialog //会话框
+    $cancel
+    $ok
     $input
     $keyboard
     /**
-     * @param {el} el 要挂载的表单,e.target
+     * @param {el} el 要挂载的表单
      * @param {function} f 设置OK键要执行的方法
      */
     constructor(el, f) {
@@ -12,20 +16,54 @@ class SafeKeyboard {
         this.init();
     }
     init() {
-        
-        this.createKeyboard();
-        // this.$keyboard.style.display = 'none';
+        this.createDialog();
+    }
+    createDialog() {
+        console.log('createDialog');
+        this.$dialog = document.createElement('div');
+        this.$dialog.style = `
+        border-radius: 10px;
+        border: 2px solid pink;
+        font-family: 楷体;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        top: 30%;
+        left: 10%;
+        right: 10%;
+        bottom: 50%;
+        position: fixed;`
+        this.$dialog.innerHTML = `
+        <ul>
+            <h3>请输入密码</h3>
+        </ul>
+        <ul>
+            <input type="text">
+        </ul>
+        <ul>
+            <button>cancel</button>
+            <button>OK</button>
+        </ul>`
+        this.$el.parentNode.appendChild(this.$dialog);
+        this.$input = this.$dialog.getElementsByTagName('input')[0];
+        this.$cancel = this.$dialog.getElementsByTagName('button')[0];
+        this.$ok = this.$dialog.getElementsByTagName('button')[1];
+        this.$input.style = `
+        height: 40px;
+        width: 100%`
+
+        this.$input.readOnly = true;
         this.$input.addEventListener('click', this.show.bind(this));
-        this.$keyboard.addEventListener('mouseleave', this.hidden.bind(this));
+        this.$cancel.addEventListener('click', this.cancel.bind(this));
+        this.$ok.addEventListener('click', this.ok.bind(this));
     }
     createKeyboard() {
-        this.$input = document.createElement("input")
-        this.$input.readOnly = true;
-        this.$el.parentNode.appendChild(this.$input);
-        
+        console.log('createKeyboard');
         this.$keyboard = document.createElement('div');
+        this.$keyboard.addEventListener('mouseleave', this.hidden.bind(this));
         this.$keyboard.setAttribute('id', 'keyboard');
-        this.$el.parentNode.appendChild(this.$keyboard);
+        this.$dialog.appendChild(this.$keyboard);
         this.$keyboard.style = `
         left: 0;
         right: 0;
@@ -87,14 +125,13 @@ class SafeKeyboard {
             values.push(el.innerHTML)
             el.addEventListener('click', this.edit.bind(this))
         })
-        // lis[3].style =``
-        // lis[15].style.color = 'red'
     }
     edit(e) {
         if (e.target.innerHTML === 'X') {
             this.$input.value = this.$input.value.substring(0, this.$input.value.length - 1);
         } else if (e.target.innerHTML === 'OK') {
             // this.f();   //safeKeyboard实例化时传入的方法;
+            console.log(this.$input.value);
             this.hidden();
         } else if (this.$input.value.length <= 16) {
             this.$input.value = this.$input.value + e.target.innerHTML;
@@ -102,12 +139,21 @@ class SafeKeyboard {
             console.warn("最长只能输入16位字符");
         }
     }
+    cancel() {
+        console.log('cancel' + this.$input.value);
+        this.$dialog.remove();
+    }
+    ok() {
+        console.log('ok' + this.$input.value);
+        this.$dialog.remove();
+    }
     show() {
-        this.$keyboard.style.display = 'block';
-        // this.init()
+        // this.$keyboard.style.display = 'block';
+        this.createKeyboard();
     }
     hidden() {
-        this.$keyboard.style.display = 'none';
+        // this.$keyboard.style.display = 'none';
+        this.$keyboard.remove();
     }
     checkPass(value) {
         let reg = /^\d{6}$/;
@@ -119,4 +165,3 @@ class SafeKeyboard {
         }
     }
 }
-// export default SafeKeyboard

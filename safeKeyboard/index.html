@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="#" type="image/x-icon">
     <title></title>
     <script src="./safeKeyboard.js"></script>
+    <script src="./test.js"></script>
 </head>
 <style>
     li {
@@ -18,29 +19,31 @@
         padding: 0;
         margin: 0;
     }
-    /* ul{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 60px;
+    .test{
+        
     }
-    li{
-        height: 100%;
-        width: 25%;
+    .test ul{
         display: flex;
-        justify-content: center;
         align-items: center;
-        font-size: x-large;
-        font-weight: bold;
-    } */
+        justify-content: space-around;
+    }
 </style>
 
 <body>
-    
-    <input type="text" class="test">
+    <button>test</button>
+
+    <div class="test">
+        
+    </div>
 
     <script>
-        new SafeKeyboard('.test');
+        let btn = document.querySelector('button')
+        btn.onclick = function(e){
+            console.log('-------------');
+            console.log(e.target);
+            // new SafeKeyboard(e.target)
+            new Test(e.target)
+        }
     </script>
 </body>
 
