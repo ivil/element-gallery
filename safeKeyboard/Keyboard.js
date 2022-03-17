@@ -5,7 +5,7 @@ class Keyboard {
     $cancel
     $ok
     $input
-    $display
+    $visibility
     $keyboard
     /**
      * @param {el} el 要挂载的表单
@@ -18,8 +18,8 @@ class Keyboard {
     }
     init() {
         this.createDialog();
-        this.$display = this.$el.style.display;
-        this.$el.style.display = 'none';
+        this.$visibility = this.$el.style.visibility;
+        this.$el.style.visibility = 'hidden';
     }
     createDialog() {
         this.$dialog = document.createElement('div');
@@ -28,8 +28,7 @@ class Keyboard {
         this.$dialog.style = `
         background: #fff;
         border-radius: 10px;
-        background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
-        font-family: 楷体;
+        background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
         font-size: larger;
         display: flex;
         flex-direction: column;
@@ -105,7 +104,7 @@ class Keyboard {
         bottom: 0;
         height: 250px;
         width: 100%;
-        background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
+        background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
         position: fixed;
         borderRadius: 5px;`
         this.$keyboard.innerHTML = `
@@ -162,7 +161,7 @@ class Keyboard {
             this.$input.value = this.$input.value.substring(0, this.$input.value.length - 1);
         } else if (e.target.innerHTML === 'OK') {
             // this.submit();   //safeKeyboard实例化时传入的方法;
-            console.log(this.$input.value);
+            // console.log(this.$input.value);
             this.hidden();
         } else if (this.$input.value.length <= 8) {
             this.$input.value = this.$input.value + e.target.innerHTML;
@@ -171,18 +170,18 @@ class Keyboard {
         }
     }
     cancel() {
-        console.log('cancel' + this.$input.value);
+        // console.log('cancel' + this.$input.value);
         this.destory();
     }
     ok() {
-        console.log('ok' + this.$input.value);
+        // console.log('ok' + this.$input.value);
         this.submit();
         this.destory();
     }
     destory() {
-        console.log(this.$input.value);
+        // console.log(this.$input.value);
         this.$dialog.remove();
-        this.$el.style.display = this.$display;
+        this.$el.style.visibility = this.$visibility;
     }
     show() {
         // this.$keyboard.style.display = 'block';

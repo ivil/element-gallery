@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="#" type="image/x-icon">
+    <title>slideshow</title>
+    <script src="./slideshow.js"></script>
+    <style>
+        .test {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 200px;
+            background-image: url(${this.$avators[0].path});
+            background-size: 100% 100%;
+            
+        }
+        a{
+            
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slideshow"></div>
+    <script>
+        let config = {
+            width: 700,    //图片宽度
+            height: 400,    //图片高度
+            margin: '100px auto',//轮播图外边距
+            speedTime: 1,     //图片移动时间
+            timeInterval: 2,    //图片切换间隔
+            direction: 'left',  //移动方向,默认向右移动，只要输入的不是left，一律向右移动
+        }
+        let imgs = [
+            {
+                path: './imgs/1.jpg',
+                url: '2',
+                title: '3',
+            },
+            {
+                path: './imgs/2.png',
+                url: '',
+                title: '',
+            },
+            {
+                path: './imgs/3.jpg',
+                url: '',
+                title: '',
+            },
+            {
+                path: './imgs/4.jpg',
+                url: '2',
+                title: '3',
+            },
+            {
+                path: './imgs/5.jpg',
+                url: '',
+                title: '',
+            },
+            {
+                path: './imgs/6.jpg',
+                url: '',
+                title: '',
+            },
+            {
+                path: './imgs/7.jpg',
+                url: '',
+                title: '',
+            },
+        ]
+        // let el = document.querySelector('.slideshow')
+        // console.log(typeof(el));
+        new Slideshow(document.querySelector('.slideshow'), config, imgs)
+    </script>
+</body>
+
+</html>
