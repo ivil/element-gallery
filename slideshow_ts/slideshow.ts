@@ -10,7 +10,6 @@ interface img {
     url: string,
     title: string
 }
-
 interface imgs {
     [img: string]: img
 }
@@ -50,7 +49,6 @@ class Slideshow {
         }
         this.$config = config || this.$config;
         this.init();
-        console.log(this.$imgs.length);
     }
     init() {
         let elStyle = `
@@ -69,30 +67,18 @@ class Slideshow {
         this.createSlideshow();
         this.changeAuto(this.$config.direction);
     }
-    slideLeft() {
+    pointerClick(option: boolean) {
         if (this.$limitClick) {
             this.$limitClick = false;
-            this.changeImg(false);
+            this.changeImg(option);
             setTimeout(() => {
                 this.$limitClick = true;
-            }, 1500)
-        } else {
-            console.warn('请不要重复点击！！！');
-        }
-    }
-    slieRight() {
-        if (this.$limitClick) {
-            this.$limitClick = false;
-            this.changeImg(true);
-            setTimeout(() => {
-                this.$limitClick = true;
-            }, 1500)
+            }, this.$config.speedTime * 1000)
         } else {
             console.warn('请不要重复点击！！！');
         }
     }
     dotClick(index) {
-        console.log(index);
         let oldImg = this.$currentImg;
         let oldDot = document.querySelector('#dot').children[oldImg] as HTMLElement;
         oldDot.style.backgroundImage = `url(${this.$avators[0].path})`
@@ -111,6 +97,60 @@ class Slideshow {
         }
         let newDot = document.querySelector('#dot').children[this.$currentImg] as HTMLElement;
         newDot.style.backgroundImage = `url(${this.$avators[1].path})`
+    }
+    changeImg(direction: boolean) {
+        let oldImg = this.$currentImg;
+        let oldDot = document.querySelector('#dot').children[oldImg] as HTMLElement;
+        oldDot.style.backgroundImage = `url(${this.$avators[0].path})`
+        if (direction) {
+            this.$currentImg--;
+            if (this.$currentImg < 0) {
+                this.$currentImg = this.$len;
+            }
+            let vectors = document.querySelectorAll('#box div') as NodeListOf<HTMLElement>;
+            let newNode = vectors[2].cloneNode(true) as HTMLElement;
+            newNode.style.left = '0px';
+            if (this.$currentImg === 0) {
+                newNode.style.backgroundImage = `url(${this.$imgs[this.$len].path})`
+            } else {
+                newNode.style.backgroundImage = `url(${this.$imgs[this.$currentImg - 1].path})`
+            }
+            vectors[2].remove();
+            vectors[1].style.left = `${this.$config.width * 2}px`;
+            vectors[0].style.left = `${this.$config.width}px`;
+            document.querySelector('#box').insertBefore(newNode, vectors[0]);
+        } else {
+            this.$currentImg++;
+            if (this.$currentImg === this.$len + 1) {
+                this.$currentImg = 0;
+            }
+            let vectors = document.querySelectorAll('#box div') as NodeListOf<HTMLElement>;
+            let newNode = vectors[2].cloneNode(true) as HTMLElement;
+            if (this.$currentImg === this.$len) {
+                newNode.style.backgroundImage = `url(${this.$imgs[0].path})`
+            } else {
+                newNode.style.backgroundImage = `url(${this.$imgs[this.$currentImg + 1].path})`
+            }
+            vectors[0].remove();
+            vectors[1].style.left = `0px`;
+            vectors[2].style.left = `${this.$config.width}px`;
+            document.querySelector('#box').appendChild(newNode);
+        }
+        let newDot = document.querySelector('#dot').children[this.$currentImg] as HTMLElement;
+        newDot.style.backgroundImage = `url(${this.$avators[1].path})`
+        // 同步更改当前图片标题和跳转URL；
+        let currentTitle = document.querySelector('#title p');
+        currentTitle.innerHTML = this.$imgs[this.$currentImg].title;
+        let vectors = document.querySelectorAll('#box div') as NodeListOf<HTMLElement>;
+        vectors[1].addEventListener('click', () => {
+            window.open(this.$imgs[this.$currentImg].url);
+        })
+    }
+    changeAuto(direction: string) {
+        let type: boolean = direction === 'left' ? false : true;
+        this.$timer = setInterval(() => {
+            this.changeImg(type);
+        }, this.$config.timeInterval * 1000);
     }
     createSlideshow() {
         let flex = `
@@ -188,9 +228,9 @@ class Slideshow {
         ${flex}`
         let pointers = document.querySelectorAll('#pointer span');
         pointers[0].setAttribute('style', pointerStyle);
-        pointers[0].addEventListener('click', this.slideLeft.bind(this))
+        pointers[0].addEventListener('click', this.pointerClick.bind(this, false))
         pointers[1].setAttribute('style', pointerStyle);
-        pointers[1].addEventListener('click', this.slieRight.bind(this))
+        pointers[1].addEventListener('click', this.pointerClick.bind(this, true))
         // 底部
         els[3].setAttribute('style', `
         height:50px;
@@ -216,52 +256,5 @@ class Slideshow {
         let dots = document.querySelector('#dot').children;
         let currentDot = dots[this.$currentImg] as HTMLElement;
         currentDot.style.backgroundImage = `url(${this.$avators[1].path})`
-    }
-    changeImg(direction: boolean) {
-        let oldImg = this.$currentImg;
-        let oldDot = document.querySelector('#dot').children[oldImg] as HTMLElement;
-        oldDot.style.backgroundImage = `url(${this.$avators[0].path})`
-        if (direction) {
-            this.$currentImg--;
-            if (this.$currentImg < 0) {
-                this.$currentImg = this.$len;
-            }
-            let vectors = document.querySelectorAll('#box div') as NodeListOf<HTMLElement>;
-            let newNode = vectors[2].cloneNode(true) as HTMLElement;
-            newNode.style.left = '0px';
-            if (this.$currentImg === 0) {
-                newNode.style.backgroundImage = `url(${this.$imgs[this.$len].path})`
-            } else {
-                newNode.style.backgroundImage = `url(${this.$imgs[this.$currentImg - 1].path})`
-            }
-            vectors[2].remove();
-            vectors[1].style.left = `${this.$config.width * 2}px`;
-            vectors[0].style.left = `${this.$config.width}px`;
-            document.querySelector('#box').insertBefore(newNode, vectors[0]);
-        } else {
-            this.$currentImg++;
-            if (this.$currentImg === this.$len + 1) {
-                this.$currentImg = 0;
-            }
-            let vectors = document.querySelectorAll('#box div') as NodeListOf<HTMLElement>;
-            let newNode = vectors[2].cloneNode(true) as HTMLElement;
-            if (this.$currentImg === this.$len) {
-                newNode.style.backgroundImage = `url(${this.$imgs[0].path})`
-            } else {
-                newNode.style.backgroundImage = `url(${this.$imgs[this.$currentImg + 1].path})`
-            }
-            vectors[0].remove();
-            vectors[1].style.left = `0px`;
-            vectors[2].style.left = `${this.$config.width}px`;
-            document.querySelector('#box').appendChild(newNode);
-        }
-        let newDot = document.querySelector('#dot').children[this.$currentImg] as HTMLElement;
-        newDot.style.backgroundImage = `url(${this.$avators[1].path})`
-    }
-    changeAuto(direction: string) {
-        let type: boolean = direction === 'left' ? false : true;
-        this.$timer = setInterval(() => {
-            this.changeImg(type);
-        }, this.$config.timeInterval * 1000);
     }
 }

@@ -8,20 +8,6 @@
     <link rel="shortcut icon" href="#" type="image/x-icon">
     <title>slideshow</title>
     <script src="./slideshow.js"></script>
-    <style>
-        .test {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 200px;
-            background-image: url(${this.$avators[0].path});
-            background-size: 100% 100%;
-            
-        }
-        a{
-            
-        }
-    </style>
 </head>
 
 <body>
@@ -38,42 +24,40 @@
         let imgs = [
             {
                 path: './imgs/1.jpg',
-                url: '2',
-                title: '3',
+                url: 'https://learnblockchain.cn/docs/solidity/solidity-by-example.html',
+                title: '1',
             },
             {
                 path: './imgs/2.png',
-                url: '',
-                title: '',
+                url: 'https://learnblockchain.cn/docs/solidity/solidity-by-example.html',
+                title: '2',
             },
             {
                 path: './imgs/3.jpg',
-                url: '',
-                title: '',
-            },
-            {
-                path: './imgs/4.jpg',
-                url: '2',
+                url: 'https://learnblockchain.cn/docs/solidity/solidity-by-example.html',
                 title: '3',
             },
             {
+                path: './imgs/4.jpg',
+                url: 'https://learnblockchain.cn/docs/solidity/solidity-by-example.html',
+                title: '4',
+            },
+            {
                 path: './imgs/5.jpg',
-                url: '',
-                title: '',
+                url: 'https://learnblockchain.cn/docs/solidity/solidity-by-example.html',
+                title: '5',
             },
             {
                 path: './imgs/6.jpg',
-                url: '',
-                title: '',
+                url: 'https://learnblockchain.cn/docs/solidity/solidity-by-example.html',
+                title: '6',
             },
             {
                 path: './imgs/7.jpg',
-                url: '',
-                title: '',
+                url: 'https://learnblockchain.cn/docs/solidity/solidity-by-example.html',
+                title: '7',
             },
         ]
-        // let el = document.querySelector('.slideshow')
-        // console.log(typeof(el));
         new Slideshow(document.querySelector('.slideshow'), config, imgs)
     </script>
 </body>

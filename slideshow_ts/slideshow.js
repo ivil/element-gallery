@@ -32,7 +32,6 @@ var Slideshow = /** @class */ (function () {
         }
         this.$config = config || this.$config;
         this.init();
-        console.log(this.$imgs.length);
     }
     Slideshow.prototype.init = function () {
         var _this = this;
@@ -47,34 +46,20 @@ var Slideshow = /** @class */ (function () {
         this.createSlideshow();
         this.changeAuto(this.$config.direction);
     };
-    Slideshow.prototype.slideLeft = function () {
+    Slideshow.prototype.pointerClick = function (option) {
         var _this = this;
         if (this.$limitClick) {
             this.$limitClick = false;
-            this.changeImg(false);
+            this.changeImg(option);
             setTimeout(function () {
                 _this.$limitClick = true;
-            }, 1500);
-        }
-        else {
-            console.warn('请不要重复点击！！！');
-        }
-    };
-    Slideshow.prototype.slieRight = function () {
-        var _this = this;
-        if (this.$limitClick) {
-            this.$limitClick = false;
-            this.changeImg(true);
-            setTimeout(function () {
-                _this.$limitClick = true;
-            }, 1500);
+            }, this.$config.speedTime * 1000);
         }
         else {
             console.warn('请不要重复点击！！！');
         }
     };
     Slideshow.prototype.dotClick = function (index) {
-        console.log(index);
         var oldImg = this.$currentImg;
         var oldDot = document.querySelector('#dot').children[oldImg];
         oldDot.style.backgroundImage = "url(".concat(this.$avators[0].path, ")");
@@ -95,6 +80,65 @@ var Slideshow = /** @class */ (function () {
         }
         var newDot = document.querySelector('#dot').children[this.$currentImg];
         newDot.style.backgroundImage = "url(".concat(this.$avators[1].path, ")");
+    };
+    Slideshow.prototype.changeImg = function (direction) {
+        var _this = this;
+        var oldImg = this.$currentImg;
+        var oldDot = document.querySelector('#dot').children[oldImg];
+        oldDot.style.backgroundImage = "url(".concat(this.$avators[0].path, ")");
+        if (direction) {
+            this.$currentImg--;
+            if (this.$currentImg < 0) {
+                this.$currentImg = this.$len;
+            }
+            var vectors_1 = document.querySelectorAll('#box div');
+            var newNode = vectors_1[2].cloneNode(true);
+            newNode.style.left = '0px';
+            if (this.$currentImg === 0) {
+                newNode.style.backgroundImage = "url(".concat(this.$imgs[this.$len].path, ")");
+            }
+            else {
+                newNode.style.backgroundImage = "url(".concat(this.$imgs[this.$currentImg - 1].path, ")");
+            }
+            vectors_1[2].remove();
+            vectors_1[1].style.left = "".concat(this.$config.width * 2, "px");
+            vectors_1[0].style.left = "".concat(this.$config.width, "px");
+            document.querySelector('#box').insertBefore(newNode, vectors_1[0]);
+        }
+        else {
+            this.$currentImg++;
+            if (this.$currentImg === this.$len + 1) {
+                this.$currentImg = 0;
+            }
+            var vectors_2 = document.querySelectorAll('#box div');
+            var newNode = vectors_2[2].cloneNode(true);
+            if (this.$currentImg === this.$len) {
+                newNode.style.backgroundImage = "url(".concat(this.$imgs[0].path, ")");
+            }
+            else {
+                newNode.style.backgroundImage = "url(".concat(this.$imgs[this.$currentImg + 1].path, ")");
+            }
+            vectors_2[0].remove();
+            vectors_2[1].style.left = "0px";
+            vectors_2[2].style.left = "".concat(this.$config.width, "px");
+            document.querySelector('#box').appendChild(newNode);
+        }
+        var newDot = document.querySelector('#dot').children[this.$currentImg];
+        newDot.style.backgroundImage = "url(".concat(this.$avators[1].path, ")");
+        // 同步更改当前图片标题和跳转URL；
+        var currentTitle = document.querySelector('#title p');
+        currentTitle.innerHTML = this.$imgs[this.$currentImg].title;
+        var vectors = document.querySelectorAll('#box div');
+        vectors[1].addEventListener('click', function () {
+            window.open(_this.$imgs[_this.$currentImg].url);
+        });
+    };
+    Slideshow.prototype.changeAuto = function (direction) {
+        var _this = this;
+        var type = direction === 'left' ? false : true;
+        this.$timer = setInterval(function () {
+            _this.changeImg(type);
+        }, this.$config.timeInterval * 1000);
     };
     Slideshow.prototype.createSlideshow = function () {
         var flex = "\n        display: flex;\n        justify-content: center;\n        align-items: center;";
@@ -118,9 +162,9 @@ var Slideshow = /** @class */ (function () {
         var pointerStyle = "\n        border-radius: 50%;\n        height:50px;\n        width:50px;\n        visibility: visible;\n        border: 1px solid black;\n        ".concat(flex);
         var pointers = document.querySelectorAll('#pointer span');
         pointers[0].setAttribute('style', pointerStyle);
-        pointers[0].addEventListener('click', this.slideLeft.bind(this));
+        pointers[0].addEventListener('click', this.pointerClick.bind(this, false));
         pointers[1].setAttribute('style', pointerStyle);
-        pointers[1].addEventListener('click', this.slieRight.bind(this));
+        pointers[1].addEventListener('click', this.pointerClick.bind(this, true));
         // 底部
         els[3].setAttribute('style', "\n        height:50px;\n        width:100%;\n        ".concat(flex, "\n        bottom:0px;\n        visibility: hidden;\n        position:absolute;"));
         for (var i = 0; i <= this.$len; i++) {
@@ -132,57 +176,6 @@ var Slideshow = /** @class */ (function () {
         var dots = document.querySelector('#dot').children;
         var currentDot = dots[this.$currentImg];
         currentDot.style.backgroundImage = "url(".concat(this.$avators[1].path, ")");
-    };
-    Slideshow.prototype.changeImg = function (direction) {
-        var oldImg = this.$currentImg;
-        var oldDot = document.querySelector('#dot').children[oldImg];
-        oldDot.style.backgroundImage = "url(".concat(this.$avators[0].path, ")");
-        if (direction) {
-            this.$currentImg--;
-            if (this.$currentImg < 0) {
-                this.$currentImg = this.$len;
-            }
-            var vectors = document.querySelectorAll('#box div');
-            var newNode = vectors[2].cloneNode(true);
-            newNode.style.left = '0px';
-            if (this.$currentImg === 0) {
-                newNode.style.backgroundImage = "url(".concat(this.$imgs[this.$len].path, ")");
-            }
-            else {
-                newNode.style.backgroundImage = "url(".concat(this.$imgs[this.$currentImg - 1].path, ")");
-            }
-            vectors[2].remove();
-            vectors[1].style.left = "".concat(this.$config.width * 2, "px");
-            vectors[0].style.left = "".concat(this.$config.width, "px");
-            document.querySelector('#box').insertBefore(newNode, vectors[0]);
-        }
-        else {
-            this.$currentImg++;
-            if (this.$currentImg === this.$len + 1) {
-                this.$currentImg = 0;
-            }
-            var vectors = document.querySelectorAll('#box div');
-            var newNode = vectors[2].cloneNode(true);
-            if (this.$currentImg === this.$len) {
-                newNode.style.backgroundImage = "url(".concat(this.$imgs[0].path, ")");
-            }
-            else {
-                newNode.style.backgroundImage = "url(".concat(this.$imgs[this.$currentImg + 1].path, ")");
-            }
-            vectors[0].remove();
-            vectors[1].style.left = "0px";
-            vectors[2].style.left = "".concat(this.$config.width, "px");
-            document.querySelector('#box').appendChild(newNode);
-        }
-        var newDot = document.querySelector('#dot').children[this.$currentImg];
-        newDot.style.backgroundImage = "url(".concat(this.$avators[1].path, ")");
-    };
-    Slideshow.prototype.changeAuto = function (direction) {
-        var _this = this;
-        var type = direction === 'left' ? false : true;
-        this.$timer = setInterval(function () {
-            _this.changeImg(type);
-        }, this.$config.timeInterval * 1000);
     };
     return Slideshow;
 }());
