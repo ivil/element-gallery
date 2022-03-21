@@ -142,7 +142,7 @@ var Slideshow = /** @class */ (function () {
     };
     Slideshow.prototype.createSlideshow = function () {
         var flex = "\n        display: flex;\n        justify-content: center;\n        align-items: center;";
-        this.$el.innerHTML = "\n            <div id=\"box\">\n                <div></div>\n                <div></div>\n                <div></div>\n            </div>\n            <div id=\"title\">\n                <p>ixxl * 1001 times</p>\n            </div>\n            <div id=\"pointer\">\n                <span>\u300A--</span>\n                <span>--\u300B</span>\n            </div>\n            <div id=\"dot\"></div>";
+        this.$el.innerHTML = "\n            <div id=\"box\">\n                <div></div>\n                <div></div>\n                <div></div>\n            </div>\n            <div id=\"title\">\n                <p></p>\n            </div>\n            <div id=\"pointer\">\n                <span>\u300A--</span>\n                <span>--\u300B</span>\n            </div>\n            <div id=\"dot\"></div>";
         var els = this.$el.children;
         var boxStyle = "\n        width:300%;\n        background-color:whitesmoke;\n        left:".concat(-this.$config.width, "px;\n        height:100%;\n        position:relative;");
         // 图片载体

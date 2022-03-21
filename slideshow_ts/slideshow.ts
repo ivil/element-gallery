@@ -164,7 +164,7 @@ class Slideshow {
                 <div></div>
             </div>
             <div id="title">
-                <p>ixxl * 1001 times</p>
+                <p></p>
             </div>
             <div id="pointer">
                 <span>《--</span>
